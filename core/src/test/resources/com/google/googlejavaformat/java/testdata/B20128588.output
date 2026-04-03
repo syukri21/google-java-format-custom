@@ -54,13 +54,13 @@ class Test {
   }
 
   void f(
-      @Foo @Bar @Baz final Object var,
-      final @Foo @Bar @Baz Object var,
-      @Foo @Bar @Baz Object var,
-      @Foo(xs = 42) @Bar @Baz Object var) {}
+    @Foo @Bar @Baz final Object var,
+    final @Foo @Bar @Baz Object var,
+    @Foo @Bar @Baz Object var,
+    @Foo(xs = 42) @Bar @Baz Object var) {}
 
   <@TA T extends @TA Object> @TA T f(List<? extends @TA T> a, List<? super @TA T> b)
-      throws @TA Exception {}
+    throws @TA Exception {}
 
   @FooXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   @BarXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -98,22 +98,22 @@ class Test {
   Object var;
 
   @Deprecated(
-      x = 42,
-      y = {
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      })
+    x = 42,
+    y = {
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    })
   Object var;
 
   @Deprecated(
-      y = {
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      })
+    y = {
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,
+      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    })
   Object var;
 }
 
@@ -121,17 +121,17 @@ class Test {
   @Mirror(in = edu.oswego.cs.dl.util.concurrent.F.class, methods = "foo"),
   @Mirror(in = edu.oswego.cs.dl.util.concurrent.F.class, methods = "foo"),
   @Mirror(
-      in = edu.oswego.cs.dl.util.concurrent.F.class,
-      enable = false,
-      methods = {
-        "foo", "foo", "foo", "foo", "foo",
-        "foo", "foo", "foo", "foo", "foo",
-        "foo", "foo", "foo", "foo", "foo",
-      }),
+    in = edu.oswego.cs.dl.util.concurrent.F.class,
+    enable = false,
+    methods = {
+      "foo", "foo", "foo", "foo", "foo",
+      "foo", "foo", "foo", "foo", "foo",
+      "foo", "foo", "foo", "foo", "foo",
+    }),
   @Mirror(
-      in = edu.oswego.cs.dl.util.concurrent.F.class,
-      enable = false,
-      methods = {"foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo"}),
+    in = edu.oswego.cs.dl.util.concurrent.F.class,
+    enable = false,
+    methods = {"foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo"}),
   @Mirror(in = edu.oswego.cs.dl.util.concurrent.F.class, methods = "foo"),
 })
 class C {}

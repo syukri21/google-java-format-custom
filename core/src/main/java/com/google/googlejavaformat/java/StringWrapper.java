@@ -367,7 +367,8 @@ public final class StringWrapper {
       // add the split line to the output, and process whatever's left
       lines.add(String.join("", line));
       if (first) {
-        width -= 6; // subsequent lines have a four-space continuation indent and a `+ `
+        // Custom fork: continuation indent is two spaces; account for `  + `.
+        width -= 4;
         first = false;
       }
     }
@@ -375,7 +376,7 @@ public final class StringWrapper {
     return lines.stream()
         .collect(
             joining(
-                "\"" + separator + Strings.repeat(" ", startColumn + (first0 ? 4 : -2)) + "+ \"",
+                "\"" + separator + Strings.repeat(" ", startColumn + (first0 ? 2 : -2)) + "+ \"",
                 "\"",
                 "\""));
   }

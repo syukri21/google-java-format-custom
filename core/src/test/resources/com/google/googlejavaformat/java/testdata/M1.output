@@ -11,32 +11,32 @@ module com.google.m {
 
   exports com.google.e1;
   exports com.google.e1 to
-      com.google.e2;
+    com.google.e2;
   exports com.google.e1 to
-      com.google.e2,
-      com.google.e3;
+    com.google.e2,
+    com.google.e3;
   exports com.google.e1 to
-      com.google.e2,
-      com.google.e3,
-      com.google.e4;
+    com.google.e2,
+    com.google.e3,
+    com.google.e4;
 
   opens com.google.o1;
   opens com.google.o1 to
-      com.google.o2;
+    com.google.o2;
   opens com.google.o1 to
-      com.google.o2,
-      com.google.o3;
+    com.google.o2,
+    com.google.o3;
   opens com.google.o1 to
-      com.google.o2,
-      com.google.o3,
-      com.googleoe4;
+    com.google.o2,
+    com.google.o3,
+    com.googleoe4;
 
   uses Foo;
   uses com.google.Bar;
 
   provides com.google.Baz with
-      Foo;
+    Foo;
   provides com.google.Baz with
-      Foo,
-      com.google.Bar;
+    Foo,
+    com.google.Bar;
 }

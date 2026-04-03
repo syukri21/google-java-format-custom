@@ -13,18 +13,18 @@ class TypeAnnotations {
   }
 
   Foo(
-      @Nullable Bar //
-          param1, //
-      Baz //
-          param2) {}
+    @Nullable Bar //
+      param1, //
+    Baz //
+      param2) {}
 
   void g(
-      @Deprecated
-          @Nullable ImmutableList<String>
-              veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
-      @Deprecated
-          @Nullable ImmutableList<String>
-              veryVeryLoooooooooooooooooooooooooooooooooooooooooooooooooooooooong) {}
+    @Deprecated
+      @Nullable ImmutableList<String>
+        veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
+    @Deprecated
+      @Nullable ImmutableList<String>
+        veryVeryLoooooooooooooooooooooooooooooooooooooooooooooooooooooooong) {}
 
   @Deprecated
   @Nullable

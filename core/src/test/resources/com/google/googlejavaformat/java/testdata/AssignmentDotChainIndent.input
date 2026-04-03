@@ -1,0 +1,18 @@
+import java.time.LocalDate;
+import java.util.List;
+
+class AssignmentDotChainIndent {
+  void format(List<Account> subsidiaryAccounts) {
+    LocalDate nearestExpirationDate = subsidiaryAccounts.stream()
+            .map(Account::getExpirationDate)
+            .filter(expirationDate -> expirationDate != null)
+            .min(LocalDate::compareTo)
+            .orElse(null);
+  }
+
+  static class Account {
+    LocalDate getExpirationDate() {
+      return null;
+    }
+  }
+}

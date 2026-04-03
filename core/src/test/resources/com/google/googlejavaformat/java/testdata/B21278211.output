@@ -6,12 +6,12 @@ class B21278211 {
 
     x.f().g();
     x.fzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz()
-        .gzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz();
+      .gzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz();
 
     x.f().g().h();
     x.f()
-        .g()
-        .hzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz();
+      .g()
+      .hzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz();
 
     x.f().g().h().i();
   }

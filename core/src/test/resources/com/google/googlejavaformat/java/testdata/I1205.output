@@ -1,8 +1,8 @@
 public interface Foo {
 
-  private static String foo =
-      """
-      foo\
-      bar\
-      """;
+  private static String
+    foo = """
+    foo\
+    bar\
+    """;
 }

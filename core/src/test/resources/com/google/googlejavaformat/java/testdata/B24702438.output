@@ -38,23 +38,18 @@ class B24702438 {
   }
 
   void f(
-      int a,
-      @Nullable @Deprecated
-          ImmutableList<String>
-              veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
-      @Nullable @Deprecated
-          ImmutableList<String>
-              veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
-      @Nullable @Deprecated
-          ImmutableList<String>
-              veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
-      int c) {}
+    int a,
+    @Nullable @Deprecated
+      ImmutableList<String> veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
+    @Nullable @Deprecated
+      ImmutableList<String> veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
+    @Nullable @Deprecated
+      ImmutableList<String> veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
+    int c) {}
 
   void g(
-      @Nullable @Deprecated
-          ImmutableList<String>
-              veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
-      @Nullable @Deprecated
-          ImmutableList<String>
-              veryVeryLoooooooooooooooooooooooooooooooooooooooooooooooooooooooong) {}
+    @Nullable @Deprecated
+      ImmutableList<String> veryVeryLooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong,
+    @Nullable @Deprecated
+      ImmutableList<String> veryVeryLoooooooooooooooooooooooooooooooooooooooooooooooooooooooong) {}
 }

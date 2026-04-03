@@ -316,16 +316,33 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
     this.indentMultiplier = indentMultiplier;
     this.markdownJavadocPositions = markdownJavadocPositions;
     minusTwo = Indent.Const.make(-2, indentMultiplier);
-    minusFour = Indent.Const.make(-4, indentMultiplier);
+    // Custom fork: use 2-space continuation indent instead of 4-space.
+    minusFour = Indent.Const.make(-2, indentMultiplier);
     plusTwo = Indent.Const.make(+2, indentMultiplier);
-    plusFour = Indent.Const.make(+4, indentMultiplier);
+    // Keep existing call-sites, but map "plusFour" semantic indent to +2.
+    plusFour = Indent.Const.make(+2, indentMultiplier);
   }
 
   /** A record of whether we have visited into an expression. */
   private final Deque<Boolean> inExpression = new ArrayDeque<>(ImmutableList.of(false));
+  /** Track whether current subtree is scanned as assignment/declaration RHS. */
+  private final Deque<Boolean> inAssignmentRhs = new ArrayDeque<>(ImmutableList.of(false));
 
   private boolean inExpression() {
     return inExpression.peekLast();
+  }
+
+  private boolean inAssignmentRhs() {
+    return inAssignmentRhs.peekLast();
+  }
+
+  private void scanAsAssignmentRhs(Tree tree) {
+    inAssignmentRhs.addLast(true);
+    try {
+      scan(tree, null);
+    } finally {
+      inAssignmentRhs.removeLast();
+    }
   }
 
   @Override
@@ -646,8 +663,9 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
     scan(node.getVariable(), null);
     builder.space();
     splitToken(operatorName(node));
-    builder.breakOp(" ");
-    scan(node.getExpression(), null);
+    // Custom fork: keep `=` and RHS on the same physical line; prefer breaks inside RHS.
+    builder.space();
+    scanAsAssignmentRhs(node.getExpression());
     builder.close();
     return null;
   }
@@ -665,8 +683,9 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
     scan(node.getVariable(), null);
     builder.space();
     splitToken(operatorName(node));
-    builder.breakOp(" ");
-    scan(node.getExpression(), null);
+    // Custom fork: keep compound assignment operator and RHS together.
+    builder.space();
+    scanAsAssignmentRhs(node.getExpression());
     builder.close();
     return null;
   }
@@ -1446,9 +1465,10 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
     if (isArrayInitializer) {
       builder.space();
     } else {
-      builder.breakOp(" ");
+      // Custom fork: avoid wrapping immediately after '=' for annotation arguments.
+      builder.space();
     }
-    scan(node.getExpression(), null);
+    scanAsAssignmentRhs(node.getExpression());
     builder.close();
   }
 
@@ -3026,8 +3046,8 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
 
     boolean needDot = false;
 
-    // The dot chain started with a primary expression: output it normally, and indent
-    // the rest of the chain +4.
+    // The dot chain started with a primary expression: output it normally, and keep
+    // continuation indentation at the surrounding context level.
     if (node != null) {
       // Exception: if it's an anonymous class declaration, we don't need to
       // break and indent after the trailing '}'.
@@ -3036,7 +3056,7 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
         scan(getArrayBase(node), null);
         token(".");
       } else {
-        builder.open(plusFour);
+        builder.open(plusTwo);
         scan(getArrayBase(node), null);
         builder.breakOp();
         needDot = true;
@@ -3123,7 +3143,7 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
     boolean trailingDereferences = items.size() > 1;
     boolean needDot0 = needDot;
     if (!needDot0) {
-      builder.open(plusFour);
+      builder.open(ZERO);
     }
     // don't break after the first element if it is every small, unless the
     // chain starts with another expression
@@ -3132,7 +3152,7 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
     for (ExpressionTree e : items) {
       if (needDot) {
         if (length > minLength) {
-          builder.breakOp(FillMode.UNIFIED, "", ZERO);
+          builder.breakOp(FillMode.UNIFIED, "", inAssignmentRhs() ? ZERO : plusTwo);
         }
         token(".");
         length++;
@@ -3142,7 +3162,7 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
         dotExpressionUpToArgs(e, Optional.of(tyargTag));
         Indent tyargIndent = Indent.If.make(tyargTag, plusFour, ZERO);
         dotExpressionArgsAndParen(
-            e, tyargIndent, (trailingDereferences || needDot) ? plusFour : ZERO);
+            e, tyargIndent, (trailingDereferences || needDot) ? plusFour : plusTwo);
       }
       length += getLength(e, getCurrentPath());
       needDot = true;
@@ -3176,7 +3196,7 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
         || methodInvocation.getArguments().size() != 1) {
       return false;
     }
-    builder.open(ZERO);
+    builder.open(plusTwo);
     builder.open(indent);
     visit(name);
     token("(");
@@ -3206,7 +3226,7 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
     // Are there method invocations or field accesses after the prefix?
     boolean trailingDereferences = !prefixes.isEmpty() && getLast(prefixes) < items.size() - 1;
 
-    builder.open(plusFour);
+    builder.open(ZERO);
     for (int times = 0; times < prefixes.size(); times++) {
       builder.open(ZERO);
     }
@@ -3223,7 +3243,7 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
           fillMode = FillMode.UNIFIED;
         }
 
-        builder.breakOp(fillMode, "", ZERO, Optional.of(nameTag));
+        builder.breakOp(fillMode, "", inAssignmentRhs() ? ZERO : plusTwo, Optional.of(nameTag));
         token(".");
       }
       BreakTag tyargTag = genSym();
@@ -3234,7 +3254,8 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
       }
 
       Indent tyargIndent = Indent.If.make(tyargTag, plusFour, ZERO);
-      Indent argsIndent = Indent.If.make(nameTag, plusFour, trailingDereferences ? plusFour : ZERO);
+      Indent argsIndent =
+          Indent.If.make(nameTag, plusFour, trailingDereferences ? plusFour : plusTwo);
       dotExpressionArgsAndParen(e, tyargIndent, argsIndent);
 
       needDot = true;
@@ -3712,8 +3733,9 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
         } else {
           builder.open(Indent.If.make(typeBreak, plusFour, ZERO));
           {
-            builder.breakToFill(" ");
-            scan(initializer.get(), null);
+            // Custom fork: keep RHS on same line as '=' when possible.
+            builder.space();
+            scanAsAssignmentRhs(initializer.get());
           }
           builder.close();
         }
@@ -3841,8 +3863,8 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
         builder.space();
         token("=");
         builder.open(plusFour);
-        builder.breakOp(" ");
-        scan(initializer, null);
+        builder.space();
+        scanAsAssignmentRhs(initializer);
         builder.close();
       }
       builder.close();

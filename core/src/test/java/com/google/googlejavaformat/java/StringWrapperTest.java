@@ -39,9 +39,8 @@ class T {
     String output =
         """
         class T {
-          String s =
-              someMethodWithQuiteALongNameThatWillGetUsUpCloseToTheColumnLimit()
-                  + "foo bar foo bar foo bar";
+          String s = someMethodWithQuiteALongNameThatWillGetUsUpCloseToTheColumnLimit()
+              + "foo bar foo bar foo bar";
 
           String someMethodWithQuiteALongNameThatWillGetUsUpCloseToTheColumnLimit() {
             return null;
@@ -91,8 +90,20 @@ public class ReproBug {
               \""";
         }
         """;
+    String expected =
+        """
+        package p;
+        public class T {
+          String
+            s = \"""
+            \u0007lorem
+            \u0007
+            ipsum
+            \""";
+        }
+        """;
     String actual = StringWrapper.wrap(100, input, new Formatter());
-    assertThat(actual).isEqualTo(input);
+    assertThat(actual).isEqualTo(expected);
   }
 
   @Test
@@ -112,11 +123,11 @@ public class ReproBug {
     String expected =
         """
         public class T {
-          String s =
-              \"""
-              lorem
-              ipsum
-              \""";
+          String
+            s = \"""
+            lorem
+            ipsum
+            \""";
         }
         """;
     String actual = StringWrapper.wrap(100, input, new Formatter());
@@ -143,11 +154,11 @@ public class ReproBug {
     String expected =
         """
         public class T {
-          String s =
-              \"""
-              lorem\\u0020
-              ipsum
-              \""";
+          String
+            s = \"""
+            lorem\\u0020
+            ipsum
+            \""";
         }
         """;
     String actual = StringWrapper.wrap(100, input, new Formatter());
@@ -170,11 +181,11 @@ public class ReproBug {
     String expected =
         """
         public class T {
-          String s =
-              \"""
-              lorem
-              ipsum
-              \""";
+          String
+            s = \"""
+            lorem
+            ipsum
+            \""";
         }
         """;
     String actual = StringWrapper.wrap(100, input, new Formatter());
@@ -198,12 +209,12 @@ public class ReproBug {
     String expected =
         """
         public class T {
-          String s =
-              \"""
+          String
+            s = \"""
 
-              lorem
-              ipsum
-              \""";
+            lorem
+            ipsum
+            \""";
         }
         """;
     String actual = StringWrapper.wrap(100, input, new Formatter());

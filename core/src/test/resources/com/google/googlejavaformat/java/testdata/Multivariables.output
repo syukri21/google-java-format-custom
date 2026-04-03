@@ -1,7 +1,7 @@
 class Multivariables {
   int xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
-      yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy,
-      zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz;
+    yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy,
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz;
 
   // Horizontal and veritcal paddings used for most cells in the standings table.
   private final int hpad, vpad;
