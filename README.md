@@ -196,6 +196,21 @@ Your starting point should be the instance methods of
 mvn install
 ```
 
+## Custom Changes in This Fork
+
+This fork contains formatter behavior customized for the Midas/Ledger codebase.
+
+Changes compared with upstream:
+
+- Continuation indentation is adjusted to 2 spaces in places that are 4-space continuation in upstream.
+- Assignment RHS dot-chain formatting is customized so chains like `foo = bar.stream()` can continue with 2-space style.
+- Downstream Neovim integration is expected to use the built jar: `core/target/google-java-format-HEAD-SNAPSHOT-all-deps.jar`.
+
+Validation in this fork:
+
+- `mvn -pl core test -DfailIfNoTests=false` passes with current custom behavior.
+- Regression test added for assignment dot-chain behavior: `DotChainAssignmentIndentTest`.
+
 ## Contributing
 
 Please see [the contributors guide](CONTRIBUTING.md) for details.
