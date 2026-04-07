@@ -208,6 +208,66 @@ public final class DotChainAssignmentIndentTest {
     assertThat(format(input)).isEqualTo(expected);
   }
 
+  @Test
+  public void thenAnswerLambdaBlockStaysOnSameLineAsOpeningParen() throws FormatterException {
+    String input =
+        """
+        import static org.mockito.ArgumentMatchers.any;
+        import static org.mockito.Mockito.when;
+
+        import java.util.UUID;
+
+        class MockitoLambda {
+          interface MutationRepository {
+            Mutation save(Mutation mutation);
+          }
+
+          static class Mutation {
+            void setId(UUID id) {}
+          }
+
+          void format(MutationRepository mutationRepository) {
+            when(mutationRepository.save(any(Mutation.class)))
+              .thenAnswer(
+              i -> {
+                final Mutation m = i.getArgument(0);
+                m.setId(UUID.randomUUID());
+                return m;
+              });
+          }
+        }
+        """;
+
+    String expected =
+        """
+        import static org.mockito.ArgumentMatchers.any;
+        import static org.mockito.Mockito.when;
+
+        import java.util.UUID;
+
+        class MockitoLambda {
+          interface MutationRepository {
+            Mutation save(Mutation mutation);
+          }
+
+          static class Mutation {
+            void setId(UUID id) {}
+          }
+
+          void format(MutationRepository mutationRepository) {
+            when(mutationRepository.save(any(Mutation.class)))
+              .thenAnswer(i -> {
+              final Mutation m = i.getArgument(0);
+              m.setId(UUID.randomUUID());
+              return m;
+            });
+          }
+        }
+        """;
+
+    assertThat(format(input)).isEqualTo(expected);
+  }
+
   private static String format(String input) throws FormatterException {
     Formatter formatter = new Formatter();
     String output = formatter.formatSource(input);

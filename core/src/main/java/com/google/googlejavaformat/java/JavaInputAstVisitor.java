@@ -1385,16 +1385,27 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
       builder.breakOp(" ");
     }
     switch (node.getBody()) {
-      case BlockTree blockTree ->
-          visitBlock(
-              blockTree,
-              CollapseEmptyOrNot.YES,
-              AllowLeadingBlankLine.NO,
-              AllowTrailingBlankLine.NO);
+      case BlockTree blockTree -> visitLambdaBodyBlock(blockTree);
       case Tree expressionTree -> scan(expressionTree, null);
     }
     builder.close();
     return null;
+  }
+
+  private void visitLambdaBodyBlock(BlockTree blockTree) {
+    if (blockTree.getStatements().isEmpty()) {
+      token("{");
+      token("}");
+      return;
+    }
+    tokenBreakTrailingComment("{", plusTwo);
+    builder.blankLineWanted(BlankLineWanted.NO);
+    builder.open(plusTwo);
+    visitStatements(blockTree.getStatements());
+    builder.close();
+    builder.forcedBreak();
+    builder.blankLineWanted(BlankLineWanted.NO);
+    token("}");
   }
 
   @Override
@@ -3404,7 +3415,8 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
    * @param plusIndent the extra indent for the arguments
    */
   private void addArguments(List<? extends ExpressionTree> arguments, Indent plusIndent) {
-    builder.open(plusIndent);
+    boolean singleBlockLambdaArgument = isSingleBlockLambdaArgument(arguments);
+    builder.open(singleBlockLambdaArgument ? ZERO : plusIndent);
     token("(");
     if (!arguments.isEmpty()) {
       if (arguments.size() % 2 == 0 && argumentsAreTabular(arguments) == 2) {
@@ -3438,7 +3450,9 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
         builder.close();
         builder.close();
       } else {
-        builder.breakOp();
+        if (!singleBlockLambdaArgument) {
+          builder.breakOp();
+        }
         argList(arguments);
       }
     }
@@ -3459,6 +3473,15 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
       afterFirstToken = true;
     }
     builder.close();
+  }
+
+  private static boolean isSingleBlockLambdaArgument(List<? extends ExpressionTree> arguments) {
+    if (arguments.size() != 1) {
+      return false;
+    }
+    ExpressionTree onlyArgument = getOnlyElement(arguments);
+    return onlyArgument instanceof LambdaExpressionTree lambdaExpressionTree
+        && lambdaExpressionTree.getBodyKind() == LambdaExpressionTree.BodyKind.STATEMENT;
   }
 
   /**
@@ -3666,10 +3689,7 @@ class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
         modifiers
             .map(m -> splitModifiers(m, m.getAnnotations()))
             .orElse(DeclarationModifiersAndTypeAnnotations.empty());
-    builder.open(
-        kind == DeclarationKind.PARAMETER && declarationAndTypeModifiers.hasDeclarationAnnotation()
-            ? plusFour
-            : ZERO);
+    builder.open(ZERO);
     {
       List<AnnotationTree> annotations =
           visitModifiers(
